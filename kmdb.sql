@@ -112,13 +112,66 @@
 
 -- Drop existing tables, so you'll start fresh each time this script is run.
 -- TODO!
+DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS movies;
+DROP TABLE IF EXISTS studio;
+
 
 -- Create new tables, according to your domain model
 -- TODO!
+CREATE TABLE studio (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT
+);
+
+CREATE TABLE movies (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    movie TEXT,
+    year TEXT,
+    MPAA TEXT,
+    studio_id INTEGER,
+    FOREIGN KEY (studio_id) REFERENCES studio(id)
+);
+
+CREATE TABLE roles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    movie_id INTEGER,
+    actor TEXT,
+    character TEXT,
+    FOREIGN KEY (movie_id) REFERENCES movies(id)
+);
+
 
 -- Insert data into your database that reflects the sample data shown above
 -- Use hard-coded foreign key IDs when necessary
 -- TODO!
+
+INSERT INTO studio (name) VALUES 
+('Warner Bros.');
+
+
+INSERT INTO movies (movie, year, MPAA, studio_id) VALUES
+('Batman Begins', '2005', 'PG-13', 1),
+('The Dark Knight', '2008', 'PG-13', 1),
+('The Dark Knight Rises', '2012', 'PG-13', 1);
+
+
+INSERT INTO roles (movie_id, actor, character) VALUES
+(1,         'Christian Bale'        ,'Bruce Wayne'          ),  
+(1,         'Michael Caine'         ,'Alfred'               ),
+(1,         'Liam Neeson'           ,'Ra''s Al Ghul'        ),
+(1,         'Katie Holmes'          ,'Rachel Dawes'         ), 
+(1,         'Gary Oldman'           ,'Commissioner Gordon'  ),
+(2,         'Christian Bale'        ,'Bruce Wayne'          ),
+(2,         'Heath Ledger'          ,'Joker'                ),
+(2,         'Aaron Eckhart'         ,'Harvey Dent'          ),
+(2,         'Michael Caine'         ,'Alfred'               ),
+(2,         'Maggie Gyllenhaal'     ,'Rachel Dawes'         ),
+(3,         'Christian Bale'        ,'Bruce Wayne'          ),
+(3,         'Gary Oldman'           ,'Commissioner Gordon'  ),
+(3,         'Tom Hardy'             ,'Bane'                 ),
+(3,         'Joseph Gordon-Levitt'  ,'John Blake'           ),
+(3,         'Anne Hathaway'         ,'Selina Kyle'          );
 
 -- Prints a header for the movies output
 .print "Movies"
@@ -127,6 +180,10 @@
 
 -- The SQL statement for the movies output
 -- TODO!
+
+SELECT movie, year, MPAA, name
+FROM movies
+JOIN studio ON movies.studio_id = studio.id;
 
 -- Prints a header for the cast output
 .print ""
@@ -137,3 +194,7 @@
 
 -- The SQL statement for the cast output
 -- TODO!
+
+SELECT movies.movie, roles.actor, roles.character
+FROM roles
+JOIN movies ON roles.movie_id = movies.id;
